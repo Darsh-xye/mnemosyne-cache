@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "resp.hpp"
+
 class Server {
 public:
     Server(int port);
@@ -16,6 +18,8 @@ private:
     int epoll_fd_;
 
     std::unordered_map<int, std::string> client_buffers_;
+
+    RespParser parser_;
 
     void setup_server();
     void add_client(int client_fd);

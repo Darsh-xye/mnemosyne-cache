@@ -122,26 +122,26 @@ void Server::remove_client(int client_fd) {
     close(client_fd);
 }
 
+
 void Server::process_buffer(int client_fd) {
     std::string& buffer = client_buffers_[client_fd];
 
     while (true) {
-        std::size_t pos = buffer.find('\n');
+        Command command;
+        std::size_t consumed = 0;
 
-        if (pos == std::string::npos) {
+        if (!parser_.parse(
+                buffer,
+                command,
+                consumed
+            )) {
             break;
         }
 
-        std::string command = buffer.substr(0, pos);
+        buffer.erase(0, consumed);
 
-        buffer.erase(0, pos + 1);
-
-        if (!command.empty() && command.back() == '\r') {
-            command.pop_back();
-        }
-
-        if (command == "PING") {
-            const char* response = "PONG\r\n";
+        if (command.name == "PING") {
+            const char* response = "+PONG\r\n";
 
             write(
                 client_fd,
@@ -149,7 +149,8 @@ void Server::process_buffer(int client_fd) {
                 std::strlen(response)
             );
         } else {
-            const char* response = "ERR unknown command\r\n";
+            const char* response =
+                "-ERR unknown command\r\n";
 
             write(
                 client_fd,
