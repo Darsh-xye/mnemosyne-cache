@@ -2,9 +2,18 @@
 
 #include <string>
 #include <unordered_map>
+#include <cstddef>
+
+struct CacheValue {
+    char* data;
+    std::size_t size;
+};
 
 class Cache {
 public:
+    Cache() = default;
+    ~Cache();
+
     void set(const std::string& key, const std::string& value);
 
     bool get(
@@ -15,5 +24,5 @@ public:
     bool del(const std::string& key);
 
 private:
-    std::unordered_map<std::string, std::string> data_;
+    std::unordered_map<std::string, CacheValue> data_;
 };
