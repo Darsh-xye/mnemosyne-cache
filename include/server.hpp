@@ -1,7 +1,7 @@
 #pragma once
 
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 class Server {
 public:
@@ -15,7 +15,11 @@ private:
     int server_fd_;
     int epoll_fd_;
 
+    std::unordered_map<int, std::string> client_buffers_;
+
     void setup_server();
     void add_client(int client_fd);
+    void remove_client(int client_fd);
     void handle_client(int client_fd);
+    void process_buffer(int client_fd);
 };

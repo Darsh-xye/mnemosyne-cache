@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <cerrno>
 
 #include <sys/socket.h>
 #include <sys/epoll.h>
@@ -14,6 +15,10 @@ Server::Server(int port)
 }
 
 Server::~Server() {
+    for (auto& [fd, buffer] : client_buffers_) {
+        close(fd);
+    }
+
     if (server_fd_ != -1) {
         close(server_fd_);
     }
@@ -100,40 +105,94 @@ void Server::add_client(int client_fd) {
         client_fd,
         &event
     );
+
+    client_buffers_[client_fd] = "";
+}
+
+void Server::remove_client(int client_fd) {
+    epoll_ctl(
+        epoll_fd_,
+        EPOLL_CTL_DEL,
+        client_fd,
+        nullptr
+    );
+
+    client_buffers_.erase(client_fd);
+
+    close(client_fd);
+}
+
+void Server::process_buffer(int client_fd) {
+    std::string& buffer = client_buffers_[client_fd];
+
+    while (true) {
+        std::size_t pos = buffer.find('\n');
+
+        if (pos == std::string::npos) {
+            break;
+        }
+
+        std::string command = buffer.substr(0, pos);
+
+        buffer.erase(0, pos + 1);
+
+        if (!command.empty() && command.back() == '\r') {
+            command.pop_back();
+        }
+
+        if (command == "PING") {
+            const char* response = "PONG\r\n";
+
+            write(
+                client_fd,
+                response,
+                std::strlen(response)
+            );
+        } else {
+            const char* response = "ERR unknown command\r\n";
+
+            write(
+                client_fd,
+                response,
+                std::strlen(response)
+            );
+        }
+    }
 }
 
 void Server::handle_client(int client_fd) {
-    char buffer[1024];
+    char buffer[4096];
 
-    ssize_t bytes_read = read(
-        client_fd,
-        buffer,
-        sizeof(buffer) - 1
-    );
-
-    if (bytes_read <= 0) {
-        epoll_ctl(
-            epoll_fd_,
-            EPOLL_CTL_DEL,
+    while (true) {
+        ssize_t bytes_read = read(
             client_fd,
-            nullptr
+            buffer,
+            sizeof(buffer)
         );
 
-        close(client_fd);
+        if (bytes_read > 0) {
+            client_buffers_[client_fd].append(
+                buffer,
+                bytes_read
+            );
+
+            continue;
+        }
+
+        if (bytes_read == 0) {
+            remove_client(client_fd);
+            return;
+        }
+
+        if (errno == EAGAIN || errno == EWOULDBLOCK) {
+            break;
+        }
+
+        remove_client(client_fd);
         return;
     }
 
-    buffer[bytes_read] = '\0';
-
-    std::cout << "Received: " << buffer << "\n";
-
-    const char* response = "PONG\n";
-
-    write(
-        client_fd,
-        response,
-        std::strlen(response)
-    );
+    process_buffer(client_fd);
 }
 
 void Server::run() {
@@ -158,7 +217,6 @@ void Server::run() {
         );
 
         if (event_count == -1) {
-            std::cerr << "epoll_wait failed\n";
             continue;
         }
 
