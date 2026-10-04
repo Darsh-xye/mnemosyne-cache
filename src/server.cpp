@@ -122,7 +122,6 @@ void Server::remove_client(int client_fd) {
     close(client_fd);
 }
 
-
 void Server::process_buffer(int client_fd) {
     std::string& buffer = client_buffers_[client_fd];
 
@@ -148,7 +147,109 @@ void Server::process_buffer(int client_fd) {
                 response,
                 std::strlen(response)
             );
-        } else {
+        }
+
+        else if (command.name == "SET") {
+            if (command.args.size() != 2) {
+                const char* response =
+                    "-ERR wrong number of arguments\r\n";
+
+                write(
+                    client_fd,
+                    response,
+                    std::strlen(response)
+                );
+
+                continue;
+            }
+
+            cache_.set(
+                command.args[0],
+                command.args[1]
+            );
+
+            const char* response = "+OK\r\n";
+
+            write(
+                client_fd,
+                response,
+                std::strlen(response)
+            );
+        }
+
+        else if (command.name == "GET") {
+            if (command.args.size() != 1) {
+                const char* response =
+                    "-ERR wrong number of arguments\r\n";
+
+                write(
+                    client_fd,
+                    response,
+                    std::strlen(response)
+                );
+
+                continue;
+            }
+
+            std::string value;
+
+            if (cache_.get(command.args[0], value)) {
+
+                std::string response =
+                    "$" +
+                    std::to_string(value.size()) +
+                    "\r\n" +
+                    value +
+                    "\r\n";
+
+                write(
+                    client_fd,
+                    response.c_str(),
+                    response.size()
+                );
+
+            } else {
+                const char* response = "$-1\r\n";
+
+                write(
+                    client_fd,
+                    response,
+                    std::strlen(response)
+                );
+            }
+        }
+
+        else if (command.name == "DEL") {
+            if (command.args.size() != 1) {
+                const char* response =
+                    "-ERR wrong number of arguments\r\n";
+
+                write(
+                    client_fd,
+                    response,
+                    std::strlen(response)
+                );
+
+                continue;
+            }
+
+            bool deleted = cache_.del(
+                command.args[0]
+            );
+
+            std::string response =
+                ":" +
+                std::to_string(deleted ? 1 : 0) +
+                "\r\n";
+
+            write(
+                client_fd,
+                response.c_str(),
+                response.size()
+            );
+        }
+
+        else {
             const char* response =
                 "-ERR unknown command\r\n";
 

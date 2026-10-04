@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "resp.hpp"
+#include "cache.hpp"
 
 class Server {
 public:
@@ -20,6 +21,7 @@ private:
     std::unordered_map<int, std::string> client_buffers_;
 
     RespParser parser_;
+    Cache cache_;
 
     void setup_server();
     void add_client(int client_fd);
