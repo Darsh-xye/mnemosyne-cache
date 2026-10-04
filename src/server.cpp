@@ -4,20 +4,26 @@
 #include <cstring>
 
 #include <sys/socket.h>
+#include <sys/epoll.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 Server::Server(int port)
-    : port_(port), server_fd_(-1) {
+    : port_(port), server_fd_(-1), epoll_fd_(-1) {
 }
 
 Server::~Server() {
     if (server_fd_ != -1) {
         close(server_fd_);
     }
+
+    if (epoll_fd_ != -1) {
+        close(epoll_fd_);
+    }
 }
 
-void Server::run() {
+void Server::setup_server() {
     server_fd_ = socket(AF_INET, SOCK_STREAM, 0);
 
     if (server_fd_ == -1) {
@@ -34,6 +40,9 @@ void Server::run() {
         &opt,
         sizeof(opt)
     );
+
+    int flags = fcntl(server_fd_, F_GETFL, 0);
+    fcntl(server_fd_, F_SETFL, flags | O_NONBLOCK);
 
     sockaddr_in address{};
 
@@ -56,36 +65,123 @@ void Server::run() {
         return;
     }
 
+    epoll_fd_ = epoll_create1(0);
+
+    if (epoll_fd_ == -1) {
+        std::cerr << "Failed to create epoll instance\n";
+        return;
+    }
+
+    epoll_event event{};
+
+    event.events = EPOLLIN;
+    event.data.fd = server_fd_;
+
+    epoll_ctl(
+        epoll_fd_,
+        EPOLL_CTL_ADD,
+        server_fd_,
+        &event
+    );
+}
+
+void Server::add_client(int client_fd) {
+    int flags = fcntl(client_fd, F_GETFL, 0);
+    fcntl(client_fd, F_SETFL, flags | O_NONBLOCK);
+
+    epoll_event event{};
+
+    event.events = EPOLLIN;
+    event.data.fd = client_fd;
+
+    epoll_ctl(
+        epoll_fd_,
+        EPOLL_CTL_ADD,
+        client_fd,
+        &event
+    );
+}
+
+void Server::handle_client(int client_fd) {
+    char buffer[1024];
+
+    ssize_t bytes_read = read(
+        client_fd,
+        buffer,
+        sizeof(buffer) - 1
+    );
+
+    if (bytes_read <= 0) {
+        epoll_ctl(
+            epoll_fd_,
+            EPOLL_CTL_DEL,
+            client_fd,
+            nullptr
+        );
+
+        close(client_fd);
+        return;
+    }
+
+    buffer[bytes_read] = '\0';
+
+    std::cout << "Received: " << buffer << "\n";
+
+    const char* response = "PONG\n";
+
+    write(
+        client_fd,
+        response,
+        std::strlen(response)
+    );
+}
+
+void Server::run() {
+    setup_server();
+
+    if (server_fd_ == -1 || epoll_fd_ == -1) {
+        return;
+    }
+
     std::cout << "Listening on port " << port_ << "\n";
 
-    while (true) {
-        int client_fd = accept(server_fd_, nullptr, nullptr);
+    constexpr int MAX_EVENTS = 64;
 
-        if (client_fd == -1) {
-            std::cerr << "Accept failed\n";
+    epoll_event events[MAX_EVENTS];
+
+    while (true) {
+        int event_count = epoll_wait(
+            epoll_fd_,
+            events,
+            MAX_EVENTS,
+            -1
+        );
+
+        if (event_count == -1) {
+            std::cerr << "epoll_wait failed\n";
             continue;
         }
 
-        char buffer[1024];
+        for (int i = 0; i < event_count; i++) {
+            int fd = events[i].data.fd;
 
-        ssize_t bytes_read = read(
-            client_fd,
-            buffer,
-            sizeof(buffer) - 1
-        );
+            if (fd == server_fd_) {
+                while (true) {
+                    int client_fd = accept(
+                        server_fd_,
+                        nullptr,
+                        nullptr
+                    );
 
-        if (bytes_read > 0) {
-            buffer[bytes_read] = '\0';
+                    if (client_fd == -1) {
+                        break;
+                    }
 
-            const char* response = "PONG\n";
-
-            write(
-                client_fd,
-                response,
-                std::strlen(response)
-            );
+                    add_client(client_fd);
+                }
+            } else {
+                handle_client(fd);
+            }
         }
-
-        close(client_fd);
     }
 }
