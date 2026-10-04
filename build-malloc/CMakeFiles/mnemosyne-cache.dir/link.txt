@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/mnemosyne-cache.dir/link.d "CMakeFiles/mnemosyne-cache.dir/src/main.cpp.o" "CMakeFiles/mnemosyne-cache.dir/src/server.cpp.o" "CMakeFiles/mnemosyne-cache.dir/src/resp.cpp.o" "CMakeFiles/mnemosyne-cache.dir/src/cache.cpp.o" "CMakeFiles/mnemosyne-cache.dir/src/allocator.cpp.o" -o mnemosyne-cache

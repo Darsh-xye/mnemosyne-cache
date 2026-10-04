@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmnemosyne.a CMakeFiles/mnemosyne.dir/src/slab.cpp.o CMakeFiles/mnemosyne.dir/src/allocator.cpp.o CMakeFiles/mnemosyne.dir/src/thread_cache.cpp.o CMakeFiles/mnemosyne.dir/src/central_pool.cpp.o CMakeFiles/mnemosyne.dir/src/slab_refill.cpp.o
+/usr/bin/ranlib libmnemosyne.a

@@ -1,0 +1,3 @@
+/home/darsh/projects/mnemosyne-cache/build-malloc/CMakeFiles/mnemosyne-cache.dir
+/home/darsh/projects/mnemosyne-cache/build-malloc/CMakeFiles/edit_cache.dir
+/home/darsh/projects/mnemosyne-cache/build-malloc/CMakeFiles/rebuild_cache.dir

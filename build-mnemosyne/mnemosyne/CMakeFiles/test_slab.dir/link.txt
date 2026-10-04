@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/test_slab.dir/link.d CMakeFiles/test_slab.dir/tests/test_slab.cpp.o -o test_slab  libmnemosyne.a -latomic

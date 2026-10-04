@@ -1,9 +1,23 @@
 #include "server.hpp"
 
-int main() {
-    Server server(6379);
+#ifdef USE_MNEMOSYNE
+#include "allocator.h"
+#endif
 
-    server.run();
+int main() {
+
+#ifdef USE_MNEMOSYNE
+    ma::init();
+#endif
+
+    {
+        Server server(6379);
+        server.run();
+    }
+
+#ifdef USE_MNEMOSYNE
+    ma::shutdown();
+#endif
 
     return 0;
 }

@@ -1,0 +1,9 @@
+/home/darsh/projects/mnemosyne-cache/build-mnemosyne/CMakeFiles/mnemosyne-cache.dir
+/home/darsh/projects/mnemosyne-cache/build-mnemosyne/CMakeFiles/edit_cache.dir
+/home/darsh/projects/mnemosyne-cache/build-mnemosyne/CMakeFiles/rebuild_cache.dir
+/home/darsh/projects/mnemosyne-cache/build-mnemosyne/mnemosyne/CMakeFiles/mnemosyne.dir
+/home/darsh/projects/mnemosyne-cache/build-mnemosyne/mnemosyne/CMakeFiles/test_slab.dir
+/home/darsh/projects/mnemosyne-cache/build-mnemosyne/mnemosyne/CMakeFiles/test_threads.dir
+/home/darsh/projects/mnemosyne-cache/build-mnemosyne/mnemosyne/CMakeFiles/bench.dir
+/home/darsh/projects/mnemosyne-cache/build-mnemosyne/mnemosyne/CMakeFiles/edit_cache.dir
+/home/darsh/projects/mnemosyne-cache/build-mnemosyne/mnemosyne/CMakeFiles/rebuild_cache.dir
