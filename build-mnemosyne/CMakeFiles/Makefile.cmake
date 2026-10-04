@@ -122,6 +122,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/mnemosyne-cache.dir/DependInfo.cmake"
+  "CMakeFiles/cache_test.dir/DependInfo.cmake"
   "mnemosyne/CMakeFiles/mnemosyne.dir/DependInfo.cmake"
   "mnemosyne/CMakeFiles/test_slab.dir/DependInfo.cmake"
   "mnemosyne/CMakeFiles/test_threads.dir/DependInfo.cmake"

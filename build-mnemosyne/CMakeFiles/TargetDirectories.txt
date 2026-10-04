@@ -1,4 +1,5 @@
 /home/darsh/projects/mnemosyne-cache/build-mnemosyne/CMakeFiles/mnemosyne-cache.dir
+/home/darsh/projects/mnemosyne-cache/build-mnemosyne/CMakeFiles/cache_test.dir
 /home/darsh/projects/mnemosyne-cache/build-mnemosyne/CMakeFiles/edit_cache.dir
 /home/darsh/projects/mnemosyne-cache/build-mnemosyne/CMakeFiles/rebuild_cache.dir
 /home/darsh/projects/mnemosyne-cache/build-mnemosyne/mnemosyne/CMakeFiles/mnemosyne.dir

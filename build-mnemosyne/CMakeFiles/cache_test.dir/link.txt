@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/cache_test.dir/link.d CMakeFiles/cache_test.dir/tests/cache_test.cpp.o CMakeFiles/cache_test.dir/src/cache.cpp.o CMakeFiles/cache_test.dir/src/allocator.cpp.o -o cache_test  mnemosyne/libmnemosyne.a -latomic

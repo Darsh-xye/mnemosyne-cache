@@ -129,12 +129,26 @@ mnemosyne-cache/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mnemosyne-cache.dir/build.make CMakeFiles/mnemosyne-cache.dir/build
 .PHONY : mnemosyne-cache/fast
 
+#=============================================================================
+# Target rules for targets named cache_test
+
+# Build rule for target.
+cache_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cache_test
+.PHONY : cache_test
+
+# fast build rule for target.
+cache_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_test.dir/build.make CMakeFiles/cache_test.dir/build
+.PHONY : cache_test/fast
+
 src/allocator.o: src/allocator.cpp.o
 .PHONY : src/allocator.o
 
 # target to build an object file
 src/allocator.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mnemosyne-cache.dir/build.make CMakeFiles/mnemosyne-cache.dir/src/allocator.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_test.dir/build.make CMakeFiles/cache_test.dir/src/allocator.cpp.o
 .PHONY : src/allocator.cpp.o
 
 src/allocator.i: src/allocator.cpp.i
@@ -143,6 +157,7 @@ src/allocator.i: src/allocator.cpp.i
 # target to preprocess a source file
 src/allocator.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mnemosyne-cache.dir/build.make CMakeFiles/mnemosyne-cache.dir/src/allocator.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_test.dir/build.make CMakeFiles/cache_test.dir/src/allocator.cpp.i
 .PHONY : src/allocator.cpp.i
 
 src/allocator.s: src/allocator.cpp.s
@@ -151,6 +166,7 @@ src/allocator.s: src/allocator.cpp.s
 # target to generate assembly for a file
 src/allocator.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mnemosyne-cache.dir/build.make CMakeFiles/mnemosyne-cache.dir/src/allocator.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_test.dir/build.make CMakeFiles/cache_test.dir/src/allocator.cpp.s
 .PHONY : src/allocator.cpp.s
 
 src/cache.o: src/cache.cpp.o
@@ -159,6 +175,7 @@ src/cache.o: src/cache.cpp.o
 # target to build an object file
 src/cache.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mnemosyne-cache.dir/build.make CMakeFiles/mnemosyne-cache.dir/src/cache.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_test.dir/build.make CMakeFiles/cache_test.dir/src/cache.cpp.o
 .PHONY : src/cache.cpp.o
 
 src/cache.i: src/cache.cpp.i
@@ -167,6 +184,7 @@ src/cache.i: src/cache.cpp.i
 # target to preprocess a source file
 src/cache.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mnemosyne-cache.dir/build.make CMakeFiles/mnemosyne-cache.dir/src/cache.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_test.dir/build.make CMakeFiles/cache_test.dir/src/cache.cpp.i
 .PHONY : src/cache.cpp.i
 
 src/cache.s: src/cache.cpp.s
@@ -175,6 +193,7 @@ src/cache.s: src/cache.cpp.s
 # target to generate assembly for a file
 src/cache.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mnemosyne-cache.dir/build.make CMakeFiles/mnemosyne-cache.dir/src/cache.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_test.dir/build.make CMakeFiles/cache_test.dir/src/cache.cpp.s
 .PHONY : src/cache.cpp.s
 
 src/main.o: src/main.cpp.o
@@ -249,6 +268,30 @@ src/server.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mnemosyne-cache.dir/build.make CMakeFiles/mnemosyne-cache.dir/src/server.cpp.s
 .PHONY : src/server.cpp.s
 
+tests/cache_test.o: tests/cache_test.cpp.o
+.PHONY : tests/cache_test.o
+
+# target to build an object file
+tests/cache_test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_test.dir/build.make CMakeFiles/cache_test.dir/tests/cache_test.cpp.o
+.PHONY : tests/cache_test.cpp.o
+
+tests/cache_test.i: tests/cache_test.cpp.i
+.PHONY : tests/cache_test.i
+
+# target to preprocess a source file
+tests/cache_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_test.dir/build.make CMakeFiles/cache_test.dir/tests/cache_test.cpp.i
+.PHONY : tests/cache_test.cpp.i
+
+tests/cache_test.s: tests/cache_test.cpp.s
+.PHONY : tests/cache_test.s
+
+# target to generate assembly for a file
+tests/cache_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_test.dir/build.make CMakeFiles/cache_test.dir/tests/cache_test.cpp.s
+.PHONY : tests/cache_test.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -257,6 +300,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... cache_test"
 	@echo "... mnemosyne-cache"
 	@echo "... src/allocator.o"
 	@echo "... src/allocator.i"
@@ -273,6 +317,9 @@ help:
 	@echo "... src/server.o"
 	@echo "... src/server.i"
 	@echo "... src/server.s"
+	@echo "... tests/cache_test.o"
+	@echo "... tests/cache_test.i"
+	@echo "... tests/cache_test.s"
 .PHONY : help
 
 
