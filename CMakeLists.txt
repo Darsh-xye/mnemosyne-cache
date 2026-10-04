@@ -10,6 +10,7 @@ add_executable(mnemosyne-cache
     src/server.cpp
     src/resp.cpp
     src/cache.cpp
+    src/allocator.cpp
 )
 
 target_include_directories(mnemosyne-cache PRIVATE include)

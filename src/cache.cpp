@@ -1,11 +1,11 @@
 #include "cache.hpp"
+#include "allocator.hpp"
 
-#include <cstdlib>
 #include <cstring>
 
 Cache::~Cache() {
     for (auto& [key, value] : data_) {
-        std::free(value.data);
+        cache_free(value.data, value.size);
     }
 }
 
@@ -14,7 +14,7 @@ void Cache::set(
     const std::string& value
 ) {
     char* new_data = static_cast<char*>(
-        std::malloc(value.size())
+        cache_alloc(value.size())
     );
 
     if (new_data == nullptr) {
@@ -30,7 +30,10 @@ void Cache::set(
     auto it = data_.find(key);
 
     if (it != data_.end()) {
-        std::free(it->second.data);
+        cache_free(
+            it->second.data,
+            it->second.size
+        );
 
         it->second.data = new_data;
         it->second.size = value.size();
@@ -69,7 +72,10 @@ bool Cache::del(const std::string& key) {
         return false;
     }
 
-    std::free(it->second.data);
+    cache_free(
+        it->second.data,
+        it->second.size
+    );
 
     data_.erase(it);
 
